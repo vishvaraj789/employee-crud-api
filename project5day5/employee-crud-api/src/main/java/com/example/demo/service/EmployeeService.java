@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.EmployeeNotFoundException;
+
 import com.example.demo.model.Employee;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,10 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeById(int id) {
-        for (Employee e : employees) {
-            if (e.getId() == id) {
-                return e;
-            }
-        }
-        return null;
+        return employees.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
     }
 
     public boolean deleteEmployee(int id) {
